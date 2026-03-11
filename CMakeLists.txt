@@ -66,3 +66,38 @@ target_link_libraries(count-opt
         MLIRFuncDialect
         MLIRAffineDialect
 )
+
+# adding the other pass
+add_library(MutateAffineForPass
+        MutateAffineFor.cpp
+)
+
+# Link the core MLIR components our pass needs to function.
+target_link_libraries(MutateAffineForPass
+        PRIVATE
+        MLIRIR
+        MLIRPass
+        MLIRFuncDialect
+        MLIRAffineDialect # Crucial for matching and analyzing affine.for loops
+        MLIRSCFDialect
+        MLIRArithmeticDialect
+)
+
+# add our executable
+add_executable(mutate-opt
+        mutate-opt.cpp
+)
+
+# Link your custom pass AND the MLIR opt utilities
+target_link_libraries(mutate-opt
+        PRIVATE
+        MutateAffineForPass    # our custom pass
+        MLIROptLib            # Provides the core infrastructure for mlir-opt clones
+        MLIRIR
+        MLIRPass
+        MLIRSupport
+        MLIRFuncDialect
+        MLIRAffineDialect
+        MLIRSCFDialect
+        MLIRArithmeticDialect
+)

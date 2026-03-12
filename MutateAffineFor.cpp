@@ -19,25 +19,29 @@ using namespace mlir;
 // this doesn't respect the semantics of the original program of course
 struct MutateAffineForPass : public PassWrapper<MutateAffineForPass, OperationPass<affine::AffineForOp>> {
     // This is required when not using TableGen
-    StringRef getArgument() const final { return "mutate-affine-for"; } // what is this argumet anyway?
+    StringRef getArgument() const final { return "mutate-affine-for"; }
     StringRef getDescription() const final { return "mutate affine for loops in a module"; }
 
     void runOnOperation() {
+
+		llvm::outs() << "[dran] insert started\n";
         // get our current op
         affine::AffineForOp for_op = getOperation(); // current must be a affine for, right?
         // get the loop body as a block
         Block* loop_body = for_op.getBody();
         // get builder
-        OpBuilder builder(loop_body->front());
+        OpBuilder builder(loop_body, loop_body->begin());
 
         // make a new scf.if
         // we'll make a true condition to make things easy
-        Value always_true = builder.create<arith::ConstantIntOp>(
+        Value always_true = arith::ConstantIntOp::create(  // note new API: builder.create has been deprecated
+			builder,
             for_op.getLoc(), // debug location, not insert location
             1, // value
             1  // one bit wide for bool
             );
-        scf::IfOp created_if = builder.create<scf::IfOp>(
+        scf::IfOp created_if = scf::IfOp::create(
+			builder,
             for_op.getLoc(),
             always_true,
             false // don't create else region
@@ -45,7 +49,7 @@ struct MutateAffineForPass : public PassWrapper<MutateAffineForPass, OperationPa
 
         // now we move the origial loop body into the new block inside if
         std::vector<Operation*> to_move;
-        for (auto each_op : *loop_body) {
+        for (auto &each_op : *loop_body) {
             if (&each_op != always_true.getDefiningOp() \
                 && &each_op != created_if.getOperation() \
                 && !each_op.hasTrait<mlir::OpTrait::IsTerminator>()) {
@@ -55,6 +59,8 @@ struct MutateAffineForPass : public PassWrapper<MutateAffineForPass, OperationPa
         for (Operation* op : to_move) {
             op->moveBefore(created_if.getBody()->getTerminator());
         }
+
+		llvm::outs() << "[dran] insert finished\n" ;
     }
 };
 

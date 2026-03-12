@@ -80,7 +80,7 @@ target_link_libraries(MutateAffineForPass
         MLIRFuncDialect
         MLIRAffineDialect # Crucial for matching and analyzing affine.for loops
         MLIRSCFDialect
-        MLIRArithmeticDialect
+        MLIRArithDialect
 )
 
 # add our executable
@@ -99,5 +99,5 @@ target_link_libraries(mutate-opt
         MLIRFuncDialect
         MLIRAffineDialect
         MLIRSCFDialect
-        MLIRArithmeticDialect
+        MLIRArithDialect
 )

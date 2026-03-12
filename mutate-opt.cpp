@@ -19,19 +19,6 @@ int main(int argc, char **argv) {
 
     mlir::PassRegistration<MutateAffineForPass>();
 
-	// Register a pipeline that finds all affine.fors automatically
-    mlir::PassPipelineRegistration<>(
-        "mutate-all-for",
-        "Run MutateAffineFor on all loops regardless of nesting",
-        [](mlir::OpPassManager &pm) {
-            // This nested call tells MLIR to find all affine.fors
-            // and schedule the pass on them.
-            pm.addNestedPass<mlir::affine::AffineForOp>(
-                std::make_unique<MutateAffineForPass>()
-            );
-        }
-    );
-
     return mlir::asMainReturnCode(
         mlir::MlirOptMain(argc, argv, "MutateAffineFor Tool", registry)
     );

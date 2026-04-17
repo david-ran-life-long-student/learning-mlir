@@ -4,6 +4,7 @@
 #include "mlir/Pass/PassRegistry.h"
 #include "mlir/Tools/mlir-opt/MlirOptMain.h"
 
+#include "mlir/Dialect/MemRef/IR/MemRef.h"
 #include "ReplaceDMA.cpp"
 
 int main(int argc, char **argv) {
@@ -11,6 +12,7 @@ int main(int argc, char **argv) {
     registry.insert<mlir::affine::AffineDialect>();
     registry.insert<mlir::arith::ArithDialect>();
     registry.insert<mlir::func::FuncDialect>();
+    registry.insert<mlir::memref::MemRefDialect>();
 
     // Correctly registering your pass
     mlir::PassRegistration<InlinedDMAPass>();

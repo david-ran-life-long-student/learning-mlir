@@ -52,8 +52,8 @@ struct InlinedDMARewritePattern : public mlir::OpRewritePattern<mlir::func::Call
         rewriter, loc, lowerBounds, upperBounds, steps,
         [&](mlir::OpBuilder &nestedBuilder, mlir::Location nestedLoc, mlir::ValueRange ivs) {
 
-          auto loadOp = nestedBuilder.create<mlir::affine::AffineLoadOp>(
-              nestedLoc, allocMemRef, ivs);
+          auto loadOp = mlir::affine::AffineLoadOp::create(
+              nestedBuilder, nestedLoc, allocMemRef, ivs);
 
           llvm::SmallVector<mlir::Value, 6> mapOperands;
           mapOperands.push_back(ivs[0]);
@@ -63,8 +63,8 @@ struct InlinedDMARewritePattern : public mlir::OpRewritePattern<mlir::func::Call
           mapOperands.push_back(dynRow);
           mapOperands.push_back(dynCol);
 
-          nestedBuilder.create<mlir::affine::AffineStoreOp>(
-              nestedLoc, loadOp.getResult(), mainMemRef, writebackMap, mapOperands);
+          mlir::affine::AffineStoreOp::create(
+              nestedBuilder, nestedLoc, loadOp.getResult(), mainMemRef, writebackMap, mapOperands);
         });
 
     rewriter.eraseOp(op);

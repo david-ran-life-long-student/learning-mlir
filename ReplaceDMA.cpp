@@ -15,6 +15,11 @@ struct InlinedDMAPass
     llvm::StringRef getArgument() const final { return "inline-hw-dma"; }
     llvm::StringRef getDescription() const final { return "Replaces DMA stub calls with polyhedral loop nests."; }
 
+    void getDependentDialects(mlir::DialectRegistry &registry) const override {
+        registry.insert<mlir::affine::AffineDialect>();
+        registry.insert<mlir::memref::MemRefDialect>();
+    }
+
     void runOnOperation() override {
         mlir::func::FuncOp function = getOperation();
         mlir::MLIRContext *context = &getContext();

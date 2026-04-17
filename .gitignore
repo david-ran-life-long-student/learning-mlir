@@ -1,2 +1,5 @@
 .idea
 build
+cmake-build-debug
+error.txt
+GEMINI.md

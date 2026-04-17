@@ -101,3 +101,21 @@ target_link_libraries(mutate-opt
         MLIRSCFDialect
         MLIRArithDialect
 )
+
+# add executable for replacing DMA
+add_executable(replace-dma-opt
+        replace-dma-opt.cpp
+)
+
+# Link your custom pass AND the MLIR opt utilities
+target_link_libraries(replace-dma-opt
+        PRIVATE
+        MLIROptLib            # Provides the core infrastructure for mlir-opt clones
+        MLIRIR
+        MLIRPass
+        MLIRSupport
+        MLIRFuncDialect
+        MLIRAffineDialect
+        MLIRSCFDialect
+        MLIRArithDialect
+)

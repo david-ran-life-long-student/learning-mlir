@@ -48,6 +48,7 @@ module {
 
     // Block until the first task is done.
     async.await %tok0 : !async.token
+    async.await %tok1 : !async.token
     async.await %tok2 : !async.token
 
     memref.dealloc %buf0 : memref<1024xf32>

@@ -31,8 +31,8 @@ module {
     // THE original: Instead of the opaque custom_hw.dma_transfer,
     // we use a standard func.call to hit the stub.
     // The type signature after the colon strictly defines the inputs and the empty () return.
-    func.call @hardware_dma_stub(%alloc, %arg12, %dyn_offset_row, %dyn_offset_col)
-        : (memref<4x1x128x64xi8, 1 : i32>, memref<512x512xi8>, index, index) -> ()
+    // func.call @hardware_dma_stub(%alloc, %arg12, %dyn_offset_row, %dyn_offset_col)
+    //     : (memref<4x1x128x64xi8, 1 : i32>, memref<512x512xi8>, index, index) -> ()
 
     // 1. The Fused Routing Logic
     // d0=i, d1=j, d2=k, d3=l (Loop Iterators)
